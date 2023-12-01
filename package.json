@@ -1,0 +1,13 @@
+{
+  "name": "adventofcode2023",
+  "type": "module",
+  "scripts": {
+    "day": "sh run.sh"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
