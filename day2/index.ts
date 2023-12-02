@@ -25,7 +25,8 @@ const maxBlue = 14;
       };
       return game;
     });
-  let sum = 0;
+  let sumGameIds = 0;
+  let sumGamePowers = 0;
   games
     .filter(
       (g) =>
@@ -33,7 +34,11 @@ const maxBlue = 14;
         g.highestGreen <= maxGreen &&
         g.highestRed <= maxRed
     )
-    .forEach((g) => (sum += g.id));
+    .forEach((g) => (sumGameIds += g.id));
+  games.forEach(
+    (g) => (sumGamePowers += g.highestBlue * g.highestGreen * g.highestRed)
+  );
   // Part 1: 2204
-  console.log("Result: ", sum);
+  // Part 2: 71036
+  console.log("Result: ", sumGamePowers);
 })();
