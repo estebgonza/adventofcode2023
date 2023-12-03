@@ -22,24 +22,27 @@ type SymbolToken = Token & {
     symbols.set(index, findSymbolTokens(line, index));
   });
   let sum = 0;
-  for (let i = 0; i < numbers.size; i++) {
-    const potentialSymbols = [
-      ...(i !== 0 ? symbols.get(i - 1) : []),
-      ...symbols.get(i),
-      ...(i !== lines.length - 1 ? symbols.get(i + 1) : []),
-    ];
-    numbers.get(i).forEach((n: NumberToken) => {
-      const symbolFrom = n.startAt - 1;
-      const symbolTo = n.endAt + 1;
-      const isAdjacent = potentialSymbols.some(
-        (s) => s.at >= symbolFrom && s.at <= symbolTo
-      );
-      if (isAdjacent) {
-        sum += n.number;
-      }
+  for (let i = 0; i < symbols.size; i++) {
+    symbols.get(i).forEach((s) => {
+      const potentialNumbers = [
+        ...(i !== 0 ? numbers.get(i - 1) : []),
+        ...numbers.get(i),
+        ...(i !== lines.length - 1 ? numbers.get(i + 1) : []),
+      ];
+      const adjacents = potentialNumbers.filter((n) => {
+        const symbolFrom = n.startAt - 1;
+        const symbolTo = n.endAt + 1;
+        return s.at >= symbolFrom && s.at <= symbolTo;
+      });
+      if (adjacents.length <= 1) return;
+      const ratio = adjacents
+        .map((n) => n.number)
+        .reduce((prev, current) => prev * current);
+      console.log(ratio);
+      sum += ratio;
     });
   }
-  console.log("Total sum:", sum);
+  console.log(sum);
 })();
 function findNumberTokens(line: string, lineIndex: number): NumberToken[] {
   const regex = /\d+/g;
