@@ -51,7 +51,5 @@ function tokenFoundToNumber(s: string): string {
         total += parseInt(`${firstNumber}${secondNumber}`);
       }
     });
-  // Part 1: 55621
-  // Part 2: 53592
   console.log("Result: ", total);
 })();

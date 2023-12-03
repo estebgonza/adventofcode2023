@@ -38,7 +38,5 @@ const maxBlue = 14;
   games.forEach(
     (g) => (sumGamePowers += g.highestBlue * g.highestGreen * g.highestRed)
   );
-  // Part 1: 2204
-  // Part 2: 71036
   console.log("Result: ", sumGamePowers);
 })();
