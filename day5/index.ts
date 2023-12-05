@@ -10,7 +10,7 @@ type Range = {
     .split("\n");
   const content = lines.reduce((prev, current) =>  prev + " " + current, "");
   const parts = content.split(":");
-  const seeds = parseAllNumbers(parts[1]);
+  const seedRanges = parseSeedRanges(parts[1]);
   // maps
   const soil = parseAndToRange(parts[2]);
   const fertilizer = parseAndToRange(parts[3]);
@@ -19,7 +19,15 @@ type Range = {
   const temperature = parseAndToRange(parts[6]);
   const humidity = parseAndToRange(parts[7]);
   const location = parseAndToRange(parts[8]);
-  const minLocation = Math.min(...seeds.map(seed => {
+  let lowestLocation = Number.MAX_VALUE;
+
+  for (let range of seedRanges) {
+    for (let i = 0; i < range.length; i++) {
+    const seed = range.start + i;
+    if (i % 1000000 === 0) {
+      const progress = (i / range.length) * 100;
+     console.log('seed=' + seed + ' progress=' + progress.toFixed(2) + '%');
+    } 
     const soilValue = getRangeValue(soil, seed);
     const fertilizerValue = getRangeValue(fertilizer, soilValue);
     const waterValue = getRangeValue(water, fertilizerValue);
@@ -27,9 +35,14 @@ type Range = {
     const temperatureValue = getRangeValue(temperature, lightValue);
     const humidityValue = getRangeValue(humidity, temperatureValue);
     const locationValue = getRangeValue(location, humidityValue);
-    return locationValue;
-  }));
-  console.log(minLocation);
+    if (locationValue < lowestLocation) {
+      lowestLocation = locationValue;
+      console.log('lowest location updated: ', lowestLocation);
+        }
+      }
+    }
+
+  console.log('=> Lowest location ', lowestLocation);
 })();
 
 function getRangeValue(ranges: Range[], src: number): number {
@@ -65,3 +78,11 @@ function toRange(values: number[]): Range[] {
   return ranges;
 }
 
+function parseSeedRanges(input: string): any {
+  let numbers = parseAllNumbers(input);
+  let ranges = [];
+  for (let i = 0; i < numbers.length; i += 2) {
+    ranges.push({ start: numbers[i], length: numbers[i + 1] });
+  }
+  return ranges;
+}
